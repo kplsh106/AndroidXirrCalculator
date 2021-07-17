@@ -6,11 +6,14 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,10 +41,14 @@ public class MainActivity extends AppCompatActivity {
         listview.setAdapter(adapter);
 
 
-        FloatingActionButton fabAdd = findViewById(R.id.fab_add);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
+        EditText editText = (EditText) findViewById(R.id.amount_org);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    handled = true;
+                }
                 EditText dateEditText=findViewById(R.id.date_org);
                 String dateInfo=dateEditText.getText().toString();
 
@@ -51,11 +58,15 @@ public class MainActivity extends AppCompatActivity {
                 double amount=Double.parseDouble(amountEditText.getText().toString());
                 ++counter;
                 investmentList.add(new invData(dateInfo,amount,counter));
-                //dateEditText.getText().clear(); //or you can use editText.setText("");
-                //amountEditText.getText().clear(); //or you can use editText.setText("");
+                dateEditText.getText().clear(); //or you can use editText.setText("");
+                amountEditText.getText().clear(); //or you can use editText.setText("");
+                dateEditText.requestFocus();
                 adapter.notifyDataSetChanged();
+                return handled;
             }
         });
+
+
         FloatingActionButton fabDone = findViewById(R.id.fab_done);
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,13 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 String per="%";
                 String xirrStr=String.format("the rate of return is %.2f%s",xirrans,per);
                 EditText ansEditText=findViewById(R.id.answer);
-                FloatingActionButton addEditText=findViewById(R.id.fab_add);
                 FloatingActionButton doneEditText=findViewById(R.id.fab_done);
                 LinearLayout ansLinearLayout=findViewById(R.id.enter_ans);
 
                 ansEditText.setVisibility(View.VISIBLE);
                 ansEditText.setText(xirrStr);
-                addEditText.setVisibility(View.INVISIBLE);
                 doneEditText.setVisibility(View.INVISIBLE);
                 ansLinearLayout.setVisibility(View.INVISIBLE);
 
