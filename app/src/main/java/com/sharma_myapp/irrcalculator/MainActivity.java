@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity {
                 double amount=Double.parseDouble(amountEditText.getText().toString());
                 ++counter;
                 investmentList.add(new invData(dateInfo,amount,counter));
+                dateEditText.requestFocus();
                 dateEditText.getText().clear(); //or you can use editText.setText("");
                 amountEditText.getText().clear(); //or you can use editText.setText("");
-                dateEditText.requestFocus();
                 adapter.notifyDataSetChanged();
                 return handled;
             }
